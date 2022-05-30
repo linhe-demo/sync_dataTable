@@ -5,8 +5,8 @@ import pandas as pd
 
 
 def dbConnection():
-    return pymysql.connect(host="120.55.52.126", port=55190, database="ecshop", user="erpteamtemp",
-                           password="erpteamtemp", connect_timeout=3600)
+    return pymysql.connect(host="***", port=0000, database="***", user="***",
+                           password="***", connect_timeout=3600)
 
 
 def save_to_excel(totalData, detailData):
