@@ -116,13 +116,14 @@ def inventoryAndSales(group, categoryList, fileName):
             else:
                 allData[index] = newData[m]
     for i in allData:
-        exportData.append(allData[i])
+        if allData[i].get("国内可预订量", 0) + allData[i].get("国外可预订量", 0) <= 6:
+            exportData.append(allData[i])
     # 写入excel
     saveToExcel({0: exportData},
                 {0: "明细"},
                 {0: ['组织', '品类', 'PID', '颜色', '主id', '国内可预订量', '国外可预订量', '过去14天销量', '过去28天销量']},
                 fileName)
-    sendEmail('from@runoob.com', ['296110717@qq.com'], '../data/inventorySales.xlsx')
+
 
 
 if __name__ == "__main__":
