@@ -76,7 +76,7 @@ def dbConnection(type, database):
     if type == 'origin':
         db = pymysql.connect(host="10.193.51.71", database=database, user="root", password="123456")
     else:
-        db = pymysql.connect(host="192.168.0.101", database=database, user="root", password="123456")
+        db = pymysql.connect(host="127.0.0.1", database=database, user="root", password="123456")
     return db
 
 
@@ -167,7 +167,7 @@ def checkTableExist(tmpTable, createTableSql, dataBase, ndb, odb):
         insertSql = insertSql % (dataBase, tmpTable, column)
 
         # 获取表中数据
-        dataSql = "SELECT * FROM `%s`.`%s` "
+        dataSql = "SELECT * FROM `%s`.`%s` LIMIT 10000 "
         ocursor.execute(dataSql % (dataBase, tmpTable))
         results = ocursor.fetchall()
         for rowData in results:
