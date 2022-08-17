@@ -1,7 +1,7 @@
 from tools.readFile import read_excl
 
 if __name__ == "__main__":
-    data = read_excl("../data/demo.xlsx")
+    data = read_excl("../data/demo.xlsx")  # 文件位置
     feature1 = data[:, 0:1]  # 取第一列
     feature2 = data[:, 1:2]  # 取第二列
     lists = []
