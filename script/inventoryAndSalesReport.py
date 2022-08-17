@@ -8,7 +8,7 @@ from tools.writeExcel import saveToExcel
 
 from sqlmap.sqlone import sqlmap
 
-from tools.sendEmail import sendEmail
+from tools.array import InArray
 
 
 def inventoryAndSales(group, categoryList, fileName):
@@ -28,7 +28,7 @@ def inventoryAndSales(group, categoryList, fileName):
             for row in results:
                 tmpSku.append(row['uniq_sku'])
                 tmpData[row['uniq_sku']] = {'组织': 'VV', '品类': i, 'PID': row['p_id'], '颜色': row['color'],
-                                            '主id': row['external_goods_id']}
+                                            '主id': str(row['external_goods_id'])}
         except Exception as e:
             raise e
         # 获取国内sku共库存数小于等于6的sku由于数量较大 分为5000一组进行读取
@@ -101,13 +101,22 @@ def inventoryAndSales(group, categoryList, fileName):
                 raise e
         # 按照pskc分组
         for m in newData:
-            index = str(newData[m].get('PID')) + "-" + str(newData[m].get('主id')) + newData[m].get('颜色')
+            index = str(newData[m].get('PID')) + newData[m].get('颜色')
             if len(allData.get(index, '')) > 0:
+                tmpIdList = allData[index]['主id'].split(",")
+                tmpId = allData[index]['主id']
+                targetId = newData[m].get('主id')
+                if not InArray(targetId, tmpIdList):
+                    if tmpIdList is not None:
+                        tmpIdList.append(str(targetId))
+                    else:
+                        tmpIdList = [str(targetId)]
+                    tmpId = ",".join(tmpIdList)
                 allData[index] = {'组织': allData[index]['组织'],
                                   '品类': allData[index]['品类'],
                                   'PID': allData[index]['PID'],
                                   '颜色': allData[index]['颜色'],
-                                  '主id': allData[index]['主id'],
+                                  '主id': tmpId,
                                   '国内可预订量': allData[index]['国内可预订量'] + newData[m].get('国内可预订量'),
                                   '国外可预订量': allData[index]['国外可预订量'] + newData[m].get('国外可预订量'),
                                   '过去14天销量': allData[index]['过去14天销量'] + newData[m].get('过去14天销量'),
