@@ -15,7 +15,24 @@ def sqlmap(index):
                         eg.goods_party_id = %s 
              AND 
                         eg.external_cat_id = %s''',
-
+        'co-inventory': '''
+             SELECT
+                        pms2.external_goods_id
+			 FROM
+			            ecshop.pms_goods_mapping pms1
+			 INNER JOIN
+			            ecshop.pms_goods_mapping pms2 ON pms2.master_goods_id = pms1.master_goods_id
+			 WHERE
+			            pms1.external_goods_id in ('%s')
+			 UNION
+			 
+			 SELECT 
+			            goods_id as external_goods_id
+			 FROM 
+			            ecshop.editor_goods
+			 WHERE 
+			            goods_id in ('%s')
+        ''',
         'getInventoryNumber': ''' /*获取pskc的可预定数（共库存, 国内可预订量，国外可预订量）*/
              SELECT
 	                    CONCAT( IFNULL( pms.p_id, eg.external_goods_id ), ega1.attr_value) skey,

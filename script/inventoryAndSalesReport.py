@@ -18,6 +18,7 @@ def inventoryAndSales(group, categoryList, fileName):
         printLog("开始品类%s数据抽取", i)
         # 获取品类下的sku数据
         tmpGid = []
+        coGid = []
         tmpData = {}
         try:
             sql = sqlmap('getCategorySku')
@@ -25,14 +26,27 @@ def inventoryAndSales(group, categoryList, fileName):
             # 拼装初始数据
             for row in results:
                 tmpGid.append(str(row['external_goods_id']))
-                tmpData[str(row['p_id']) + row['color']] = {'组织': 'VV', '品类': i, 'PID': row['p_id'], '颜色': row['color'],
+                tmpData[str(row['p_id']) + row['color']] = {'组织': 'VV', '品类': categoryList[i], 'PID': row['p_id'],
+                                                            '颜色': row['color'],
                                                             '主id': str(row['master_goods_id'])}
         except Exception as e:
             raise e
+
+        # 获取共库存id
+        step = 5000
+        tmpList = [tmpGid[i:i + step] for i in range(0, len(tmpGid), step)]
+        for m in tmpList:
+            try:
+                sql = sqlmap('co-inventory')
+                results = getAll(sql, ("','".join(m), "','".join(m)))
+                for row in results:
+                    coGid.append(str(row['external_goods_id']))
+            except Exception as e:
+                raise e
         printLog("品类%s数据量：%s", (i, len(tmpGid)))
         # 获取国内，外 可预订量（共库存）小于等于6的数据 由于数量较大 分为5000一组进行读取
         step = 5000
-        tmpList = [tmpGid[i:i + step] for i in range(0, len(tmpGid), step)]
+        tmpList = [coGid[i:i + step] for i in range(0, len(coGid), step)]
         for m in tmpList:
             try:
                 sql = sqlmap('getInventoryNumber')
@@ -40,7 +54,7 @@ def inventoryAndSales(group, categoryList, fileName):
                 for row in res:
                     if tmpData.get(row['skey']) is not None:
                         allData[row['skey']] = {'组织': tmpData[row['skey']]['组织'],
-                                                '品类': i,
+                                                '品类': tmpData[row['skey']]['品类'],
                                                 'PID': tmpData[row['skey']]['PID'],
                                                 '颜色': tmpData[row['skey']]['颜色'],
                                                 '主id': tmpData[row['skey']]['主id'],
@@ -53,10 +67,11 @@ def inventoryAndSales(group, categoryList, fileName):
                 raise e
         # 获取sku的14,28天销量数据 由于数量较大 分为5000一组进行读取
         step = 5000
-        tmpList = [tmpGid[i:i + step] for i in range(0, len(tmpGid), step)]
+        tmpList = [coGid[i:i + step] for i in range(0, len(coGid), step)]
         start = datetime.now()
-        days14 = start - timedelta(14)
-        days28 = start - timedelta(28)
+
+        days14 = (start - timedelta(14)).strftime("%Y-%m-%d")
+        days28 = (start - timedelta(28)).strftime("%Y-%m-%d")
         printLog("销量14天起始时间：%s 销量28天起始时间：%s", (days14, days28))
         for m in tmpList:
             try:
@@ -80,4 +95,6 @@ def inventoryAndSales(group, categoryList, fileName):
 
 
 if __name__ == "__main__":
-    inventoryAndSales(65594, [199, 1003, 1044, 202, 1045, 1001, 1002, 1038], '../data/inventorySales.xlsx')  # 获取库存销量数据
+    inventoryAndSales(65594, {199: "199_Fashion Dresses", 202: "202_Swimwear", 1001: "c1001_Hoodies & Sweatshirts",
+                              1002: "c1002_Sweaters", 1003: "1003_Blouses", 1038: "c1038_Pants", 1044: "1044_T-shirts",
+                              1045: "1045_Tank Tops"}, '../data/inventorySales.xlsx')  # 获取库存销量数据
