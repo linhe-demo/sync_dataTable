@@ -10,8 +10,10 @@ from tools.showInfo import printLog
 
 from sqlmap.sqlone import sqlmap
 
+from tools.sendEmail import sendEmail
 
-def inventoryAndSales(group, categoryList, fileName):
+
+def inventoryAndSales(group, categoryList, fileName, filePath):
     allData = {}
     exportData = []
     for i in categoryList:
@@ -91,10 +93,12 @@ def inventoryAndSales(group, categoryList, fileName):
     saveToExcel({0: exportData},
                 {0: "明细"},
                 {0: ['组织', '品类', 'PID', '颜色', '主id', '国内可预订量', '国外可预订量', '过去14天销量', '过去28天销量']},
-                fileName)
+                filePath)
+    # 发送邮件
+    sendEmail("数据报表", "可预订量与销量数据报表", ["muhe@kerrylan.com"], fileName, filePath, True)
 
 
 if __name__ == "__main__":
     inventoryAndSales(65594, {199: "199_Fashion Dresses", 202: "202_Swimwear", 1001: "c1001_Hoodies & Sweatshirts",
                               1002: "c1002_Sweaters", 1003: "1003_Blouses", 1038: "c1038_Pants", 1044: "1044_T-shirts",
-                              1045: "1045_Tank Tops"}, '../data/inventorySales.xlsx')  # 获取库存销量数据
+                              1045: "1045_Tank Tops"}, "inventorySales.xlsx", '../data/inventorySales.xlsx')  # 获取库存销量数据

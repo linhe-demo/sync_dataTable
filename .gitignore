@@ -1,6 +1,6 @@
-
 .idea
 config/*.json
 data/*
 config/*
 script/demo.py
+log/*

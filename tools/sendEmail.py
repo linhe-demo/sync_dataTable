@@ -1,35 +1,40 @@
-#!/usr/bin/python3
-
+import os
 import smtplib
-from email.mime.text import MIMEText
+from datetime import datetime
 from email.mime.multipart import MIMEMultipart
-from email.header import Header
+from email.mime.text import MIMEText
+
+from tools.readFile import read_json_config
+from tools.log import error
+from tools.log import info
 
 
-def sendEmail(sender, receivers, filePath):
-    # sender = 'from@runoob.com'
-    # receivers = ['296110717@qq.com']  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
+def sendEmail(title, content, receiver, fileName=None, filePath=None, DeleteStatus=False):
+    # 获取邮箱配置信息
+    config = read_json_config()  # 获取配置信息
+    config = config['email']
 
-    # 创建一个带附件的实例
     message = MIMEMultipart()
-    message['From'] = Header("菜鸟教程", 'utf-8')
-    message['To'] = Header("测试", 'utf-8')
-    subject = 'Python SMTP 邮件测试'
-    message['Subject'] = Header(subject, 'utf-8')
-
-    # 邮件正文内容
-    message.attach(MIMEText('这是菜鸟教程Python 邮件发送测试……', 'plain', 'utf-8'))
-
-    # 构造附件1，传送当前目录下的 test.txt 文件
-    att1 = MIMEText(open(filePath, 'rb').read(), 'base64', 'utf-8')
-    att1["Content-Type"] = 'application/octet-stream'
-    # 这里的filename可以任意写，写什么名字，邮件中显示什么名字
-    att1["Content-Disposition"] = 'attachment; filename="demo.xlsx"'
-    message.attach(att1)
-
+    message['From'] = "{}".format(config['fromAddress'])
+    message['To'] = ",".join(receiver)
+    message['Subject'] = title  # 邮件主题
+    message.attach(MIMEText(content, 'plain', 'utf-8'))  # 内容, 格式, 编码
+    if filePath is not None:
+        file = MIMEText(open(filePath, 'rb').read(), 'base64', 'utf-8')
+        file["Content-Type"] = 'application/octet-stream'
+        file["Content-Disposition"] = 'attachment; filename="%s"' % fileName
+        message.attach(file)
     try:
-        smtpObj = smtplib.SMTP('localhost')
-        smtpObj.sendmail(sender, receivers, message.as_string())
-        print("邮件发送成功")
-    except smtplib.SMTPException:
-        print("Error: 无法发送邮件")
+        mailserver = smtplib.SMTP_SSL(config['host'], config['port'])  # 启用SSL发信, 端口一般是465
+        mailserver.login(config['user'], config['password'])  # 登录验证
+        mailserver.sendmail(config['fromAddress'], receiver, message.as_string())  # 发送
+        mailserver.quit()
+        info("邮件发送成功 %s" % datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        if DeleteStatus is True:
+            if os.path.exists(filePath):
+                os.remove(filePath)
+                info("删除文件成功")
+            else:
+                error("删除文件失败")
+    except smtplib.SMTPException as e:
+        error(e)
