@@ -5,7 +5,7 @@ import pymysql
 from tools.readFile import read_json_config
 
 config = read_json_config()  # 获取配置信息
-config = config['db']
+config = config['db_powerful']
 
 
 def dbConnection():

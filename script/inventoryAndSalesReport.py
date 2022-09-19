@@ -45,7 +45,7 @@ def inventoryAndSales(group, categoryList, fileName, filePath):
                     coGid.append(str(row['external_goods_id']))
             except Exception as e:
                 raise e
-        printLog("品类%s数据量：%s", (i, len(tmpGid)))
+        printLog("品类%s数据量：%s", (i, len(coGid)))
         # 获取国内，外 可预订量（共库存）小于等于6的数据 由于数量较大 分为5000一组进行读取
         step = 5000
         tmpList = [coGid[i:i + step] for i in range(0, len(coGid), step)]

@@ -29,7 +29,7 @@ def sendEmail(title, content, receiver, fileName=None, filePath=None, DeleteStat
         mailserver.login(config['user'], config['password'])  # 登录验证
         mailserver.sendmail(config['fromAddress'], receiver, message.as_string())  # 发送
         mailserver.quit()
-        info("邮件发送成功 %s" % datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        info("邮件发送成功 %s 收件人：%s" % (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), receiver))
         if DeleteStatus is True:
             if os.path.exists(filePath):
                 os.remove(filePath)

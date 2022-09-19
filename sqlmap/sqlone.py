@@ -274,6 +274,237 @@ def sqlmap(index):
                             ( eoi.order_status != 0 OR 
                     NOT EXISTS ( SELECT 1 FROM ecshop.erp_order_attribute WHERE order_id = eoi.order_id AND attr_name = 'not_cheat' ) ) 
                 GROUP BY
-                        eg.external_goods_id'''
+                        eg.external_goods_id''',
+        "getVVFashionCategoryId": '''
+                SELECT category_id FROM eris.category_product_line  WHERE cpl_id = '%s'
+        ''',
+        "table-one": ''' /*   VV时装广东仓库存  表1 */
+                SELECT 
+                            egm3.p_sku       AS PSKU,
+                            egm3.uniq_sku    AS GSKU,
+                            egm3.p_id        AS PID,
+                            eg.external_goods_id  AS GID,
+                            ris.AVAILABLE_TO_RESERVED AS 库存数量,
+                            IF(gos.on_shelf = '1', '在架', '不在架') AS 网站在架状态
+                FROM  
+                            ecshop.ecs_goods_mapping egm2
+                INNER JOIN 
+                            ecshop.ecs_goods_mapping egm3 ON egm3.p_sku=egm2.p_sku
+                INNER JOIN 
+                            ecshop.ecs_goods eg ON eg.uniq_sku=egm3.uniq_sku
+                INNER JOIN 
+                            romeo.inventory_summary ris ON ris.STATUS_ID = 'INV_STTS_AVAILABLE' AND eg.product_id = ris.PRODUCT_ID AND ris.FACILITY_ID = '369258324'
+                LEFT JOIN 
+                            ecshop.goods_on_shelf gos ON gos.external_goods_id = eg.external_goods_id
+                WHERE 
+                            egm2.uniq_sku IN ('%s')
+                AND 
+                            eg.external_cat_id IN ('%s')
+                GROUP BY 
+                            PSKU, GSKU;
+        ''',
+        "table-two": '''  /*    VV时装广东仓库存  表2    */
+                SELECT
+                                egm.p_sku   AS PSKU, 
+                                eg.uniq_sku AS GSKU, 
+                                egm.p_id    AS PID, 
+                                eg.external_goods_id  AS GID, 
+                                ris.AVAILABLE_TO_RESERVED  AS 库存数量, 
+                                if(gos.on_shelf = '1', '在架', '不在架') AS 网站在架状态, 
+                                (SELECT 
+                                            SUM(eog2.goods_number)
+                                 FROM 
+                                            ecshop.ecs_goods eg2
+                                 INNER JOIN
+                                            ecshop.ecs_order_goods eog2 ON eg2.goods_id = eog2.goods_id
+                                 INNER JOIN 
+                                            ecshop.ecs_order_info eoi3 ON eoi3.order_id = eog2.order_id
+                                 WHERE
+                                            eg2.uniq_sku = eg.uniq_sku
+                                 AND 
+                                            eoi3.order_time > date_sub(current_date, interval 1 year))  AS 近1年销量,
+                                (SELECT     
+                                            SUM(eog2.goods_number)
+                                 FROM 
+                                            ecshop.ecs_goods eg2
+                                 INNER JOIN 
+                                            ecshop.ecs_order_goods eog2 ON eg2.goods_id = eog2.goods_id
+                                 INNER JOIN 
+                                            ecshop.ecs_order_info eoi3 ON eoi3.order_id = eog2.order_id
+                                 WHERE
+                                            eg2.uniq_sku = eg.uniq_sku
+                                 AND 
+                                            eoi3.order_time > date_sub(current_date, interval 6 month)) AS 近6个月销量,  
+                                (SELECT     
+                                            SUM(eog2.goods_number)
+                                 FROM 
+                                            ecshop.ecs_goods eg2
+                                 INNER JOIN 
+                                            ecshop.ecs_order_goods eog2 ON eg2.goods_id = eog2.goods_id
+                                 INNER JOIN 
+                                            ecshop.ecs_order_info eoi3 ON eoi3.order_id = eog2.order_id
+                                 WHERE
+                                            eg2.uniq_sku = eg.uniq_sku
+                                 AND 
+                                            eoi3.order_time > date_sub(current_date, interval 1 month)) AS 近3个月销量, 
+                                (SELECT 
+                                            SUM(eog2.goods_number)
+                                 FROM 
+                                            ecshop.ecs_goods eg2
+                                 INNER JOIN 
+                                            ecshop.ecs_order_goods eog2 ON eg2.goods_id = eog2.goods_id
+                                 INNER JOIN
+                                            ecshop.ecs_order_info eoi3 ON eoi3.order_id = eog2.order_id
+                                 WHERE
+                                            eg2.uniq_sku = eg.uniq_sku
+                                 AND        
+                                            eoi3.order_time > date_sub(current_date, interval 1 month)) AS 近1个月销量
+                FROM  
+                                ecshop.ecs_goods_mapping egm2
+                INNER JOIN 
+                                ecshop.ecs_goods_mapping egm3 on egm3.p_sku=egm2.p_sku
+                INNER JOIN
+                                ecshop.ecs_goods eg ON eg.uniq_sku=egm3.uniq_sku
+                INNER JOIN
+                                romeo.inventory_summary ris ON ris.STATUS_ID = 'INV_STTS_AVAILABLE' AND eg.product_id = ris.PRODUCT_ID AND ris.FACILITY_ID = '369258324'
+                LEFT JOIN
+                                ecshop.ecs_goods_mapping egm ON egm.uniq_sku = eg.uniq_sku
+                LEFT JOIN      
+                                ecshop.goods_on_shelf gos ON gos.external_goods_id = eg.external_goods_id
+                WHERE 
+                                egm2.uniq_sku IN ('%s')
+                AND
+                                eg.external_cat_id IN ('%s')
+                GROUP BY 
+                                PSKU, GSKU
+        ''',
+        "table-three": '''   /*    VV时装广东仓库存  表3    */
+                SELECT 
+                                egm.p_sku    AS PSKU, 
+                                eg.uniq_sku  AS GSKU, 
+                                egm.p_id     AS PID,
+                                eg.external_goods_id AS GID, 
+                                eoi.order_sn AS 库存SKU所属采购单号, 
+                                if(gos.on_shelf = '1', '在架', '不在架') AS 网站在架状态
+                FROM
+                                ecshop.ecs_goods eg
+                INNER JOIN 
+                                romeo.inventory_summary ris ON ris.STATUS_ID = 'INV_STTS_AVAILABLE' AND eg.product_id = ris.PRODUCT_ID AND ris.FACILITY_ID = '369258324'
+                INNER JOIN 
+                                ecshop.ecs_order_goods eog ON eg.goods_id = eog.goods_id
+                INNER JOIN
+                                ecshop.ecs_order_info eoi ON eoi.order_id = eog.order_id                 
+                LEFT JOIN       
+                                ecshop.ecs_goods_mapping egm ON egm.uniq_sku = eg.uniq_sku
+                LEFT JOIN
+                                ecshop.goods_on_shelf gos ON gos.external_goods_id = eg.external_goods_id
+                WHERE 
+                                eg.uniq_sku IN ('%s')
+                AND 
+                                eg.external_cat_id IN ('%s')
+                GROUP BY 
+                                PSKU, GSKU
+        
+        ''',
+        "table-four": '''  /*    VV时装广东样衣仓样衣单    */
+                SELECT
+                                dl.DISPATCH_SN AS 样衣工单, 
+                                dl.EXTERNAL_GOODS_ID AS 样衣ID, 
+                                dl.GOODS_SN AS SKU, 
+                                pgm.p_id AS 样衣PID, 
+                                IF(gos.on_shelf = '1', '在架', '不在架') AS 网站在架状态, 
+                                (SELECT
+                                            SUM(eog2.goods_number)
+                                 FROM
+                                            ecshop.pms_goods_mapping pgm2
+                                 INNER JOIN 
+                                            ecshop.ecs_goods eg2 ON eg2.external_goods_id = pgm2.external_goods_id
+                                 INNER JOIN 
+                                            ecshop.ecs_order_goods eog2 ON eg2.goods_id = eog2.goods_id
+                                 INNER JOIN 
+                                            ecshop.ecs_order_info eoi3 ON eoi3.order_id = eog2.order_id
+                                 WHERE 
+                                            pgm2.p_id = pgm.p_id
+                                 AND 
+                                            eoi3.order_type_id ='sale'
+                                 AND 
+                                            eoi3.order_status !='2'
+                                 AND 
+                                            eoi3.order_time > date_sub(current_date, interval 1 year))  AS 近1年销量, 
+                                (SELECT
+                                            SUM(eog2.goods_number)
+                                 FROM
+                                            ecshop.pms_goods_mapping pgm2
+                                 INNER JOIN 
+                                            ecshop.ecs_goods eg2 ON eg2.external_goods_id = pgm2.external_goods_id
+                                 INNER JOIN 
+                                            ecshop.ecs_order_goods eog2 ON eg2.goods_id = eog2.goods_id
+                                 INNER JOIN 
+                                            ecshop.ecs_order_info eoi3 ON eoi3.order_id = eog2.order_id
+                                 WHERE 
+                                            pgm2.p_id = pgm.p_id
+                                 AND 
+                                            eoi3.order_type_id ='sale'
+                                 AND 
+                                            eoi3.order_status !='2'
+                                 AND 
+                                            eoi3.order_time > date_sub(current_date, interval 6 month)) AS 近6个月销量, 
+                                (SELECT
+                                            SUM(eog2.goods_number)
+                                 FROM
+                                            ecshop.pms_goods_mapping pgm2
+                                 INNER JOIN 
+                                            ecshop.ecs_goods eg2 ON eg2.external_goods_id = pgm2.external_goods_id
+                                 INNER JOIN 
+                                            ecshop.ecs_order_goods eog2 ON eg2.goods_id = eog2.goods_id
+                                 INNER JOIN 
+                                            ecshop.ecs_order_info eoi3 ON eoi3.order_id = eog2.order_id
+                                 WHERE 
+                                            pgm2.p_id = pgm.p_id
+                                 AND 
+                                            eoi3.order_type_id ='sale'
+                                 AND 
+                                            eoi3.order_status !='2'
+                                 AND 
+                                            eoi3.order_time > date_sub(current_date, interval 3 month)) AS 近3个月销量, 
+                                (SELECT
+                                            SUM(eog2.goods_number)
+                                 FROM
+                                            ecshop.pms_goods_mapping pgm2
+                                 INNER JOIN 
+                                            ecshop.ecs_goods eg2 ON eg2.external_goods_id = pgm2.external_goods_id
+                                 INNER JOIN 
+                                            ecshop.ecs_order_goods eog2 ON eg2.goods_id = eog2.goods_id
+                                 INNER JOIN 
+                                            ecshop.ecs_order_info eoi3 ON eoi3.order_id = eog2.order_id
+                                 WHERE 
+                                            pgm2.p_id = pgm.p_id
+                                 AND 
+                                            eoi3.order_type_id ='sale'
+                                 AND 
+                                            eoi3.order_status !='2'
+                                 AND 
+                                            eoi3.order_time > date_sub(current_date, interval 1 month))  AS 近1个月销量
+                FROM 
+                            romeo.dispatch_list dl
+                INNER JOIN 
+                            ecshop.ecs_order_goods eog ON eog.rec_id = dl.ORDER_GOODS_ID
+                INNER JOIN 
+                            ecshop.ecs_order_info eoi ON eoi.order_id = eog.order_id
+                LEFT JOIN 
+                            ecshop.pms_goods_mapping pgm ON pgm.external_goods_id = dl.EXTERNAL_GOODS_ID
+                LEFT JOIN 
+                            ecshop.goods_on_shelf gos ON gos.external_goods_id = dl.EXTERNAL_GOODS_ID
+                WHERE 
+                            1
+                AND 
+                            dl.DISPATCH_STATUS_ID ='FINISHED'
+                AND 
+                            dl.PARTY_ID in ('65584', '65601')
+                AND 
+                            dl.EXTERNAL_CAT_ID in ('%s')
+                AND 
+                            eoi.facility_id IN ('2115062918');
+        '''
     }
     return sql[index]
