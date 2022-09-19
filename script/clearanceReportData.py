@@ -41,7 +41,6 @@ def clearanceData(warehouseId, fileName, filePath):
     table4 = []
     step = 5000
     begin = 0
-
     tmpList = [skuList[i:i + step] for i in range(0, len(skuList), step)]
     for m in tmpList:
         printLog("前%s-%s SKU数据拉取", (begin, len(m) + begin))
@@ -96,7 +95,7 @@ def clearanceData(warehouseId, fileName, filePath):
                  3: ['样衣工单', '样衣ID', 'SKU', '样衣PID', '网站在架状态', '近1年销量', '近6个月销量', '近3个月销量', '近1个月销量']},
                 filePath)
     # 发送邮件
-    sendEmail("数据报表", "广东仓VV时装数据报表", ["muhe@kerrylan.com"], fileName, filePath, False)
+    sendEmail("数据报表", "广东仓VV时装数据报表", ["tina.zhang@kerrylan.com"], fileName, filePath, False)
 
 
 if __name__ == "__main__":

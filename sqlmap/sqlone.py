@@ -285,7 +285,7 @@ def sqlmap(index):
                             egm3.p_id        AS PID,
                             eg.external_goods_id  AS GID,
                             ris.AVAILABLE_TO_RESERVED AS 库存数量,
-                            IF(gos.on_shelf = '1', '在架', '不在架') AS 网站在架状态
+                            IF(sos.uniq_sku IS NULL, IF(gos.on_shelf = '1', '在架', '不在架'), IF(sos.on_shelf = '1', '在架', '不在架')) AS 网站在架状态
                 FROM  
                             ecshop.ecs_goods_mapping egm2
                 INNER JOIN 
@@ -296,6 +296,8 @@ def sqlmap(index):
                             romeo.inventory_summary ris ON ris.STATUS_ID = 'INV_STTS_AVAILABLE' AND eg.product_id = ris.PRODUCT_ID AND ris.FACILITY_ID = '369258324'
                 LEFT JOIN 
                             ecshop.goods_on_shelf gos ON gos.external_goods_id = eg.external_goods_id
+                LEFT JOIN   
+                            ecshop.sku_on_shelf sos ON eg.uniq_sku = sos.uniq_sku
                 WHERE 
                             egm2.uniq_sku IN ('%s')
                 AND 
@@ -310,7 +312,7 @@ def sqlmap(index):
                                 egm.p_id    AS PID, 
                                 eg.external_goods_id  AS GID, 
                                 ris.AVAILABLE_TO_RESERVED  AS 库存数量, 
-                                if(gos.on_shelf = '1', '在架', '不在架') AS 网站在架状态, 
+                                IF(sos.uniq_sku IS NULL, IF(gos.on_shelf = '1', '在架', '不在架'), IF(sos.on_shelf = '1', '在架', '不在架')) AS 网站在架状态, 
                                 (SELECT 
                                             SUM(eog2.goods_number)
                                  FROM 
@@ -371,6 +373,8 @@ def sqlmap(index):
                                 ecshop.ecs_goods_mapping egm ON egm.uniq_sku = eg.uniq_sku
                 LEFT JOIN      
                                 ecshop.goods_on_shelf gos ON gos.external_goods_id = eg.external_goods_id
+                LEFT JOIN   
+                                ecshop.sku_on_shelf sos ON eg.uniq_sku = sos.uniq_sku
                 WHERE 
                                 egm2.uniq_sku IN ('%s')
                 AND
