@@ -45,14 +45,14 @@ def clearanceData(warehouseId, fileName, filePath):
     for m in tmpList:
         printLog("前%s-%s SKU数据拉取", (begin, len(m) + begin))
         #  表1数据
-        try:
-            printLog("表1数据抽取中....", None)
-            sql = sqlmap('table-one')
-            results = getAll(sql, ("','".join(m), "','".join(categoryList)))
-            for row in results:
-                table1.append(row)
-        except Exception as e:
-            raise e
+        # try:
+        #     printLog("表1数据抽取中....", None)
+        #     sql = sqlmap('table-one')
+        #     results = getAll(sql, ("','".join(m), "','".join(categoryList)))
+        #     for row in results:
+        #         table1.append(row)
+        # except Exception as e:
+        #     raise e
 
         #  表2数据
         try:
@@ -76,15 +76,15 @@ def clearanceData(warehouseId, fileName, filePath):
         begin += len(m)
 
     # 表4数据
-    for n in categoryList:
-        try:
-            printLog("品类：%s 表4数据抽取中....", n)
-            sql = sqlmap('table-four')
-            results = getAll(sql, n)
-            for row in results:
-                table4.append(row)
-        except Exception as e:
-            raise e
+    # for n in categoryList:
+    #     try:
+    #         printLog("品类：%s 表4数据抽取中....", n)
+    #         sql = sqlmap('table-four')
+    #         results = getAll(sql, n)
+    #         for row in results:
+    #             table4.append(row)
+    #     except Exception as e:
+    #         raise e
 
     # 写入excel
     saveToExcel({0: table1, 1: table2, 2: table3, 3: table4},

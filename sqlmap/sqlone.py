@@ -323,6 +323,14 @@ def sqlmap(index):
                                             ecshop.ecs_order_info eoi3 ON eoi3.order_id = eog2.order_id
                                  WHERE
                                             eg2.uniq_sku = eg.uniq_sku
+                                 AND RIGHT 
+                                            ( eoi3.email, 8 ) != 'tetx.com' 
+		                         AND RIGHT 
+		                                    ( eoi3.email, 8 ) != 'i9i8.com' 
+		                         AND RIGHT 
+		                                    ( eoi3.email, 8 ) != 'ylan.com' 
+		                         AND 
+		                                    eoi3.order_type_id = 'SALE'
                                  AND 
                                             eoi3.order_time > date_sub(current_date, interval 1 year))  AS 近1年销量,
                                 (SELECT     
@@ -335,6 +343,14 @@ def sqlmap(index):
                                             ecshop.ecs_order_info eoi3 ON eoi3.order_id = eog2.order_id
                                  WHERE
                                             eg2.uniq_sku = eg.uniq_sku
+                                 AND RIGHT 
+                                            ( eoi3.email, 8 ) != 'tetx.com' 
+		                         AND RIGHT 
+		                                    ( eoi3.email, 8 ) != 'i9i8.com' 
+		                         AND RIGHT 
+		                                    ( eoi3.email, 8 ) != 'ylan.com' 
+		                         AND 
+		                                    eoi3.order_type_id = 'SALE'
                                  AND 
                                             eoi3.order_time > date_sub(current_date, interval 6 month)) AS 近6个月销量,  
                                 (SELECT     
@@ -347,8 +363,16 @@ def sqlmap(index):
                                             ecshop.ecs_order_info eoi3 ON eoi3.order_id = eog2.order_id
                                  WHERE
                                             eg2.uniq_sku = eg.uniq_sku
+                                 AND RIGHT 
+                                            ( eoi3.email, 8 ) != 'tetx.com' 
+		                         AND RIGHT 
+		                                    ( eoi3.email, 8 ) != 'i9i8.com' 
+		                         AND RIGHT 
+		                                    ( eoi3.email, 8 ) != 'ylan.com' 
+		                         AND 
+		                                    eoi3.order_type_id = 'SALE'
                                  AND 
-                                            eoi3.order_time > date_sub(current_date, interval 1 month)) AS 近3个月销量, 
+                                            eoi3.order_time > date_sub(current_date, interval 3 month)) AS 近3个月销量, 
                                 (SELECT 
                                             SUM(eog2.goods_number)
                                  FROM 
@@ -359,6 +383,14 @@ def sqlmap(index):
                                             ecshop.ecs_order_info eoi3 ON eoi3.order_id = eog2.order_id
                                  WHERE
                                             eg2.uniq_sku = eg.uniq_sku
+                                 AND RIGHT 
+                                            ( eoi3.email, 8 ) != 'tetx.com' 
+		                         AND RIGHT 
+		                                    ( eoi3.email, 8 ) != 'i9i8.com' 
+		                         AND RIGHT 
+		                                    ( eoi3.email, 8 ) != 'ylan.com' 
+		                         AND 
+		                                    eoi3.order_type_id = 'SALE'
                                  AND        
                                             eoi3.order_time > date_sub(current_date, interval 1 month)) AS 近1个月销量
                 FROM  
