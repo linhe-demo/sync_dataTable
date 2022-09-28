@@ -276,7 +276,7 @@ def sqlmap(index):
                 GROUP BY
                         eg.external_goods_id''',
         "getVVFashionCategoryId": '''
-                SELECT category_id FROM eris.category_product_line  WHERE cpl_id = '%s'
+                SELECT category_id FROM eris.category_product_line  WHERE cpl_id in ('%s')
         ''',
         "table-one": ''' /*   VV时装广东仓库存  表1 */
                 SELECT 

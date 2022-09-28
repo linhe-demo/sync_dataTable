@@ -18,7 +18,7 @@ def clearanceData(warehouseId, fileName, filePath):
     categoryList = []
     try:
         sql = sqlmap("getVVFashionCategoryId")
-        results = getAll(sql, warehouseId)
+        results = getAll(sql, "','".join(warehouseId))
         for row in results:
             categoryList.append(str(row['category_id']))
     except Exception as e:
@@ -45,14 +45,14 @@ def clearanceData(warehouseId, fileName, filePath):
     for m in tmpList:
         printLog("前%s-%s SKU数据拉取", (begin, len(m) + begin))
         #  表1数据
-        # try:
-        #     printLog("表1数据抽取中....", None)
-        #     sql = sqlmap('table-one')
-        #     results = getAll(sql, ("','".join(m), "','".join(categoryList)))
-        #     for row in results:
-        #         table1.append(row)
-        # except Exception as e:
-        #     raise e
+        try:
+            printLog("表1数据抽取中....", None)
+            sql = sqlmap('table-one')
+            results = getAll(sql, ("','".join(m), "','".join(categoryList)))
+            for row in results:
+                table1.append(row)
+        except Exception as e:
+            raise e
 
         #  表2数据
         try:
@@ -99,4 +99,5 @@ def clearanceData(warehouseId, fileName, filePath):
 
 
 if __name__ == "__main__":
-    clearanceData(2645, "clearance.xlsx", "../data/clearance.xlsx")  # 获取VV时装广东仓库存，样衣单数据
+    # clearanceData(2645, "clearance.xlsx", "../data/clearance.xlsx")  # 获取VV时装广东仓库存，样衣单数据
+    clearanceData(['2069', '202', '2608'], "clearance.xlsx", "../data/clearance.xlsx")  # 获取VV配件，泳衣，鞋子 广东仓库存，样衣单数据
