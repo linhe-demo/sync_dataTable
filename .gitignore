@@ -4,3 +4,4 @@ data/*
 config/*
 script/demo.py
 log/*
+script/runData.py
