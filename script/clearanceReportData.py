@@ -48,7 +48,7 @@ def clearanceData(warehouseId, fileName, filePath):
         try:
             printLog("表1数据抽取中....", None)
             sql = sqlmap('table-one')
-            results = getAll(sql, ("','".join(m), "','".join(categoryList)))
+            results = getAll(sql, ("','".join(m)))
             for row in results:
                 table1.append(row)
         except Exception as e:
@@ -58,7 +58,7 @@ def clearanceData(warehouseId, fileName, filePath):
         try:
             printLog("表2数据抽取中....", None)
             sql = sqlmap('table-two')
-            results = getAll(sql, ("','".join(m), "','".join(categoryList)))
+            results = getAll(sql, ("','".join(m)))
             for row in results:
                 table2.append(row)
         except Exception as e:

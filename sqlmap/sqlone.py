@@ -285,7 +285,7 @@ def sqlmap(index):
                             egm3.p_id        AS PID,
                             eg.external_goods_id  AS GID,
                             ris.AVAILABLE_TO_RESERVED AS 库存数量,
-                            IF(sos.uniq_sku IS NULL, IF(gos.on_shelf = '1', '在架', '不在架'), IF(sos.on_shelf = '1', '在架', '不在架')) AS 网站在架状态
+                            IF(sos.uniq_sku IS NULL OR sos.on_shelf NOT IN (0, 1), IF(gos.on_shelf = '1', '在架', '不在架'), IF(sos.on_shelf = '1', '在架', '不在架')) AS 网站在架状态
                 FROM  
                             ecshop.ecs_goods_mapping egm2
                 INNER JOIN 
@@ -300,8 +300,6 @@ def sqlmap(index):
                             ecshop.sku_on_shelf sos ON eg.uniq_sku = sos.uniq_sku
                 WHERE 
                             egm2.uniq_sku IN ('%s')
-                AND 
-                            eg.external_cat_id IN ('%s')
                 GROUP BY 
                             PSKU, GSKU;
         ''',
@@ -312,7 +310,7 @@ def sqlmap(index):
                                 egm.p_id    AS PID, 
                                 eg.external_goods_id  AS GID, 
                                 ris.AVAILABLE_TO_RESERVED  AS 库存数量, 
-                                IF(sos.uniq_sku IS NULL, IF(gos.on_shelf = '1', '在架', '不在架'), IF(sos.on_shelf = '1', '在架', '不在架')) AS 网站在架状态, 
+                                IF(sos.uniq_sku IS NULL OR sos.on_shelf NOT IN (0, 1), IF(gos.on_shelf = '1', '在架', '不在架'), IF(sos.on_shelf = '1', '在架', '不在架')) AS 网站在架状态, 
                                 (SELECT 
                                             SUM(eog2.goods_number)
                                  FROM 
@@ -409,8 +407,6 @@ def sqlmap(index):
                                 ecshop.sku_on_shelf sos ON eg.uniq_sku = sos.uniq_sku
                 WHERE 
                                 egm2.uniq_sku IN ('%s')
-                AND
-                                eg.external_cat_id IN ('%s')
                 GROUP BY 
                                 PSKU, GSKU
         ''',
@@ -541,6 +537,66 @@ def sqlmap(index):
                             dl.EXTERNAL_CAT_ID in ('%s')
                 AND 
                             eoi.facility_id IN ('2115062918');
-        '''
+        ''',
+        "getCategorySupplierInfo": '''
+                SELECT
+                            ep.provider_code AS 供应商CODE,
+                            ep.provider_name AS 供应商名称,
+                            GROUP_CONCAT( epb.first_name, epb.last_name ) AS 收款人姓名,
+                            epb.personal_mobile_number AS 手机号码,
+                            epb.personal_id_number AS 身份证号码,
+                            epb.account_number AS 收款账号,
+                            GROUP_CONCAT( epb.bank_name, epb.bank_branch ) AS 开户行,
+                            epb.cnapsCode AS 银行联行号,
+                            group_concat( ec.cat_name ) AS 分类名 
+                FROM
+                            ecshop.ecs_provider ep
+                LEFT JOIN 
+                            ecshop.ecs_provider_beneficiary epb ON ep.provider_id = epb.provider_id
+                LEFT JOIN 
+                            ecshop.provider_product_line ppl ON ppl.provider_id = ep.provider_id
+                LEFT JOIN 
+                            ecshop.ecs_category ec ON ec.cat_id = ppl.cat_id 
+                WHERE
+                            ep.is_cooperate = 'Y' 
+                AND 
+                            ppl.is_delete = 0 
+                AND 
+                            ec.cat_name = '%s' 
+                GROUP BY
+                            ep.provider_id
+                HAVING 
+                            收款人姓名 IS NOT NULL ;
+        ''',
+        "getDressAccessoriesSupplierInfo": '''
+                    SELECT
+                                ep.provider_code AS 供应商CODE,
+                                ep.provider_name AS 供应商名称,
+                                GROUP_CONCAT( epb.first_name, epb.last_name ) AS 收款人姓名,
+                                epb.personal_mobile_number AS 手机号码,
+                                epb.personal_id_number AS 身份证号码,
+                                epb.account_number AS 收款账号,
+                                GROUP_CONCAT( epb.bank_name, epb.bank_branch ) AS 开户行,
+                                epb.cnapsCode AS 银行联行号,
+                                group_concat( ec.cat_name ) AS 分类名 
+                    FROM
+                                ecshop.ecs_provider ep
+                    LEFT JOIN 
+                                ecshop.ecs_provider_beneficiary epb ON ep.provider_id = epb.provider_id
+                    LEFT JOIN 
+                                ecshop.provider_product_line ppl ON ppl.provider_id = ep.provider_id
+                    LEFT JOIN 
+                                ecshop.ecs_category ec ON ec.cat_id = ppl.cat_id 
+                    WHERE
+                                ep.is_cooperate = 'Y' 
+                    AND 
+                                ppl.is_delete = 0 
+                    AND 
+                                ep.provider_code IN ('%s') 
+                    GROUP BY
+                                ep.provider_id
+                    HAVING 
+                                收款人姓名 IS NOT NULL ;
+            '''
     }
     return sql[index]
