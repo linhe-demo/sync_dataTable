@@ -124,5 +124,5 @@ def getInventoryAndSalas(partyId, categoryId, fileName, filePath):
 
 
 if __name__ == "__main__":
-    getInventoryAndSalas(65545, 295, "jjsInventoryAndSalasInfo.xlsx",
-                         "../data/jssInventoryAndSalasInfo.xlsx")  # JJS 轻礼服时装销量&入库数据拉取
+    getInventoryAndSalas(65545, 295, "jjsInventoryAndSalasInfo.xls",
+                         "../data/jssInventoryAndSalasInfo.xls")  # JJS 轻礼服时装销量&入库数据拉取
