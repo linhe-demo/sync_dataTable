@@ -40,7 +40,7 @@ def getSupplierInfo(categoryList, dressAccessoriesList, fileName, filePath):
                 {0: ['供应商CODE', '供应商名称', '收款人姓名', '手机号码', '身份证号码', '收款账号', '开户行', '银行联行号', '分类名']},
                 filePath)
     # 发送邮件
-    sendEmail("数据报表", "鞋子、衣服配件、其他配件供应商收款信息", ["tina.zhang@kerrylan.com"], fileName, filePath, False)
+    sendEmail("数据报表", "鞋子、衣服配件、其他配件供应商收款信息", ["kimmy.zhang@kerrylan.com"], fileName, filePath, False)
 
 
 if __name__ == "__main__":
