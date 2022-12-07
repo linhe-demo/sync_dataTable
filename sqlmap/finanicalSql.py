@@ -8,7 +8,9 @@ def sqlmap(index):
                 FROM
 	                        romeo.refund 
                 WHERE
-	                        ORDER_ID IN ('%s');
+	                        ORDER_ID IN ('%s')
+	            AND 
+	                        `STATUS` = 'RFND_STTS_EXECUTED';
         ''',
         "getOrderInfoByShippingTime": '''
             SELECT
