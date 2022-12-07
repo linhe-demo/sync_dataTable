@@ -25,10 +25,10 @@ def sendEmail(title, content, receiver, fileName=None, filePath=None, DeleteStat
         file["Content-Disposition"] = 'attachment; filename="%s"' % fileName
         message.attach(file)
     try:
-        mailserver = smtplib.SMTP_SSL(config['host'], config['port'])  # 启用SSL发信, 端口一般是465
-        mailserver.login(config['user'], config['password'])  # 登录验证
-        mailserver.sendmail(config['fromAddress'], receiver, message.as_string())  # 发送
-        mailserver.quit()
+        mailers = smtplib.SMTP_SSL(config['host'], config['port'])  # 启用SSL发信, 端口一般是465
+        mailers.login(config['user'], config['password'])  # 登录验证
+        mailers.sendmail(config['fromAddress'], receiver, message.as_string())  # 发送
+        mailers.quit()
         info("邮件发送成功 %s 收件人：%s" % (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), receiver))
         if DeleteStatus is True:
             if os.path.exists(filePath):
