@@ -34,16 +34,15 @@ def financialReturnShippingFee(bDate, eDate, fileName, filePath):
     for m in tmpList:
         try:
             sql = sqlmap('getReturnShippingFee')
-            results = getAll(sql, ("','".join(m)))
+            results = getAll(sql, ('%Y-%m-%d', '%Y-%m-01', "','".join(m)))
             for row in results:
                 if tmpData.get(row['order_id']) is not None:
-                    if row['fee'] < 0:
-                        exportData.append({
-                            '订单号': tmpData[row['order_id']]['订单号'],
-                            '发货月份': tmpData[row['order_id']]['发货月份'],
-                            '对应的退货物流收入': row['fee'],
-                            '退款完成时间': row['finishDate']
-                        })
+                    exportData.append({
+                        '订单号': tmpData[row['order_id']]['订单号'],
+                        '发货月份': tmpData[row['order_id']]['发货月份'],
+                        '对应的退货物流收入': row['fee'],
+                        '退款完成时间': row['finishDate']
+                    })
         except Exception as e:
             raise e
     # 写入excel
@@ -51,7 +50,7 @@ def financialReturnShippingFee(bDate, eDate, fileName, filePath):
                 {0: "明细"},
                 {0: ['订单号', '发货月份', '对应的退货物流收入', '退款完成时间']},
                 filePath)
-    sendEmail("数据报表", "退货物流收入", ["tansuan@kerrylan.com"], fileName, filePath, False)
+    sendEmail("数据报表", "退货物流收入", ["tansuan@kerrylan.com"], fileName, filePath, True)
 
 
 if __name__ == "__main__":
