@@ -6,3 +6,4 @@ script/demo.py
 script/demo1.py
 log/*
 script/runData.py
+demo/*
