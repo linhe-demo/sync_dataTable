@@ -71,7 +71,7 @@ def getSupplierInfoNew(categoryList, party, dressAccessoriesList, fileName, file
     # 写入excel
     saveToExcel({0: supplierInfo},
                 {0: "明细"},
-                {0: ['供应商CODE', '供应商名称', '收款人姓名', '手机号码', '身份证号码', '收款账号', '开户行', '银行联行号', '银行地址', '分类名']},
+                {0: ['供应商CODE', '供应商名称', '收款人姓名', '手机号码', '身份证号码', '收款账号', '支行信息', '开户行', '银行联行号', '银行地址', '分类名']},
                 filePath)
     # 发送邮件
     sendEmail("数据报表", "鞋子、衣服配件、其他配件供应商收款信息", ["kimmy.zhang@kerrylan.com"], fileName, filePath, False)

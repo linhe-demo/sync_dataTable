@@ -548,6 +548,7 @@ def sqlmap(index):
                             epb.account_number AS 收款账号,
                             GROUP_CONCAT( epb.bank_name, epb.bank_branch ) AS 开户行,
                             epb.cnapsCode AS 银行联行号,
+                            epb.bank_branch AS 支行信息,
                             group_concat( ec.cat_name ) AS 分类名 
                 FROM
                             ecshop.ecs_provider ep
@@ -578,6 +579,7 @@ def sqlmap(index):
                                 epb.account_number AS 收款账号,
                                 GROUP_CONCAT( epb.bank_name, epb.bank_branch ) AS 开户行,
                                 epb.cnapsCode AS 银行联行号,
+                                epb.bank_branch AS 支行信息,
                                 group_concat( ec.cat_name ) AS 分类名,
                                 epb.street AS 银行地址
                     FROM
@@ -609,6 +611,7 @@ def sqlmap(index):
                                 epb.account_number AS 收款账号,
                                 GROUP_CONCAT( epb.bank_name, epb.bank_branch ) AS 开户行,
                                 epb.cnapsCode AS 银行联行号,
+                                epb.bank_branch AS 支行信息,
                                 epb.street AS 银行地址
                     FROM
                                 ecshop.ecs_provider ep
