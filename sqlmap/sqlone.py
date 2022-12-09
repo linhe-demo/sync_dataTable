@@ -578,7 +578,8 @@ def sqlmap(index):
                                 epb.account_number AS 收款账号,
                                 GROUP_CONCAT( epb.bank_name, epb.bank_branch ) AS 开户行,
                                 epb.cnapsCode AS 银行联行号,
-                                group_concat( ec.cat_name ) AS 分类名 
+                                group_concat( ec.cat_name ) AS 分类名,
+                                epb.street AS 银行地址
                     FROM
                                 ecshop.ecs_provider ep
                     LEFT JOIN 
@@ -597,6 +598,40 @@ def sqlmap(index):
                                 ep.provider_id
                     HAVING 
                                 收款人姓名 IS NOT NULL ;
-            '''
+            ''',
+        "getCategorySupplierInfoNew": '''
+                    SELECT
+                                ep.provider_code AS 供应商CODE,
+                                ep.provider_name AS 供应商名称,
+                                GROUP_CONCAT( epb.first_name, epb.last_name ) AS 收款人姓名,
+                                epb.personal_mobile_number AS 手机号码,
+                                epb.personal_id_number AS 身份证号码,
+                                epb.account_number AS 收款账号,
+                                GROUP_CONCAT( epb.bank_name, epb.bank_branch ) AS 开户行,
+                                epb.cnapsCode AS 银行联行号,
+                                epb.street AS 银行地址
+                    FROM
+                                ecshop.ecs_provider ep
+                    INNER JOIN
+                                ecshop.provider_party pp ON pp.provider_id = ep.provider_id AND pp.is_used = 'Y'
+                    LEFT JOIN 
+                                ecshop.ecs_provider_beneficiary epb ON ep.provider_id = epb.provider_id
+                    LEFT JOIN 
+                                ecshop.provider_product_line ppl ON ppl.provider_id = ep.provider_id
+                    LEFT JOIN 
+                                ecshop.ecs_category ec ON ec.cat_id = ppl.cat_id 
+                    WHERE
+                                ep.is_cooperate = 'Y' 
+                    AND 
+                                pp.party_id = '%s'
+                    AND 
+                                ppl.is_delete = 0 
+                    AND 
+                                ppl.cat_id = '%s' 
+                    GROUP BY
+                                ep.provider_id
+                    HAVING 
+                                收款人姓名 IS NOT NULL ;
+        '''
     }
     return sql[index]
