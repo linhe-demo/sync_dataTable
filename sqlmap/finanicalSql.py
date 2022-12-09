@@ -14,6 +14,8 @@ def sqlmap(index):
                         r.ORDER_ID IN ( '%s' ) 
             AND 
                         `STATUS` = 'RFND_STTS_EXECUTED'
+            AND 
+                        REFUND_TYPE_ID = 5
             ''',
         "getOrderInfoByShippingTime": '''
             SELECT

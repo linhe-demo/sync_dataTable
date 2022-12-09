@@ -45,12 +45,13 @@ def financialReturnShippingFee(bDate, eDate, fileName, filePath):
                     })
         except Exception as e:
             raise e
+
     # 写入excel
     saveToExcel({0: exportData},
                 {0: "明细"},
                 {0: ['订单号', '发货月份', '对应的退货物流收入', '退款完成时间']},
                 filePath)
-    sendEmail("数据报表", "退货物流收入", ["tansuan@kerrylan.com"], fileName, filePath, True)
+    sendEmail("数据报表", "退货物流收入", ["tansuan@kerrylan.com"], fileName, filePath, False)
 
 
 if __name__ == "__main__":
