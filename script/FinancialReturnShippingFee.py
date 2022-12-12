@@ -52,7 +52,7 @@ def financialReturnShippingFee(bDate, eDate, fileName, filePath):
                 {0: "明细"},
                 {0: ['订单号', '发货月份', '对应的退货物流收入', '退款完成时间']},
                 filePath)
-    sendEmail("数据报表", "退货物流收入", ["tansuan@kerrylan.com"], fileName, filePath, False)
+    sendEmail("数据报表", "退货物流收入", ["tansuan@kerrylan.com"], fileName, filePath, True)
 
 
 def financialRefundTimeFee(bDate, eDate, fileName, filePath):
@@ -68,6 +68,7 @@ def financialRefundTimeFee(bDate, eDate, fileName, filePath):
                 '退货申请时间': row['r_date'],
                 '发货月份': row['s_date'],
                 '退款完成时间': row['finishDate'],
+                '品类ID': row['external_cat_id'],
                 '退款状态': row['r_status']
             })
     except Exception as e:
@@ -76,9 +77,9 @@ def financialRefundTimeFee(bDate, eDate, fileName, filePath):
     # 写入excel
     saveToExcel({0: exportData},
                 {0: "明细"},
-                {0: ['订单号', '退货申请时间', '发货月份', '退款完成时间', '退款状态']},
+                {0: ['订单号', '退货申请时间', '发货月份', '退款完成时间', '品类ID', '退款状态']},
                 filePath)
-    sendEmail("数据报表", "退货物流收入", ["tansuan@kerrylan.com"], fileName, filePath, False)
+    sendEmail("数据报表", "退货物流收入", ["tansuan@kerrylan.com"], fileName, filePath, True)
 
 
 if __name__ == "__main__":
