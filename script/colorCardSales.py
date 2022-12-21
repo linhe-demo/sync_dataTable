@@ -6,6 +6,8 @@ from sqlmap.salesSql import sqlmap
 from tools.dbLink import getAll
 from tools.sendEmail import sendEmail
 from tools.showInfo import printLog
+from tools.statusMap import saleOrderStatusMap
+from tools.statusMap import shippingStatusMap
 
 from tools.writeExcel import saveToExcel
 
@@ -23,14 +25,16 @@ def calculateColorCardSales(beginDate, endDate, factory, category, fileName, fil
                 '外部订单号': row['外部订单号'],
                 '发货时间': row['发货时间'],
                 '色卡个数': row['色卡个数'],
-                '该订单具体的sku': row['该订单具体的sku']
+                '该订单具体的sku': row['该订单具体的sku'],
+                '订单状态': saleOrderStatusMap(row['order_status']),
+                '发货状态': shippingStatusMap(row['shipping_status'])
             })
     except Exception as e:
         raise e
     # 写入excel
     saveToExcel({0: exportData},
                 {0: "明细"},
-                {0: ['外部订单号', '发货时间', '色卡个数', '该订单具体的sku']},
+                {0: ['外部订单号', '发货时间', '色卡个数', '该订单具体的sku', '订单状态', '发货状态']},
                 filePath)
 
     sendEmail("数据报表", "色卡销量信息", ["cindy.hu@kerrylan.com"], fileName, filePath, False)
