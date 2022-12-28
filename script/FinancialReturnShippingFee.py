@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 # 财务分析-匹配对应的退货物流收入
 # 【数据拉取】财务分析-退款时效分析（oak-4331）
+#
 from datetime import timedelta, datetime
 
 from tools.dbLink import getAll
@@ -69,7 +70,8 @@ def financialRefundTimeFee(bDate, eDate, fileName, filePath):
                 '发货月份': row['s_date'],
                 '退款完成时间': row['finishDate'],
                 '品类ID': row['external_cat_id'],
-                '退款状态': row['r_status']
+                '退款状态': row['r_status'],
+                '国家': row['region_name']
             })
     except Exception as e:
         raise e
@@ -77,14 +79,14 @@ def financialRefundTimeFee(bDate, eDate, fileName, filePath):
     # 写入excel
     saveToExcel({0: exportData},
                 {0: "明细"},
-                {0: ['订单号', '退货申请时间', '发货月份', '退款完成时间', '品类ID', '退款状态']},
+                {0: ['订单号', '退货申请时间', '发货月份', '退款完成时间', '品类ID', '退款状态', '国家']},
                 filePath)
-    sendEmail("数据报表", "退货物流收入", ["tansuan@kerrylan.com"], fileName, filePath, True)
+    # sendEmail("数据报表", "退货物流收入", ["tansuan@kerrylan.com"], fileName, filePath, True)
 
 
 if __name__ == "__main__":
     # financialReturnShippingFee("2022-08-01", "2022-10-01", 'financialReturnShippingFee.xlsx',
     #                            '../data/financialReturnShippingFee.xlsx')
 
-    financialRefundTimeFee("2022-08-01 00:00:00", "2022-11-30 23:59:59", 'financialRefundTimeFee.xlsx',
+    financialRefundTimeFee("2022-09-05 00:00:00", "2022-12-27 23:59:59", 'financialRefundTimeFee.xlsx',
                            '../data/financialRefundTimeFee.xlsx')

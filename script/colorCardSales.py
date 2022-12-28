@@ -4,6 +4,7 @@ import pymysql
 from sqlmap.salesSql import sqlmap
 
 from tools.dbLink import getAll
+from tools.runTime import logExecutionTime
 from tools.sendEmail import sendEmail
 from tools.showInfo import printLog
 from tools.statusMap import saleOrderStatusMap
@@ -41,4 +42,5 @@ def calculateColorCardSales(beginDate, endDate, factory, category, fileName, fil
 
 
 if __name__ == "__main__":
+
     calculateColorCardSales('2022-11-13 00:00:00', '2022-12-13 23:59:59', '30246773', '33', 'colorCardSales.xlsx', '../data/colorCardSales.xlsx')  # 色卡销量
