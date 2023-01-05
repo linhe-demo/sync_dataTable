@@ -5,7 +5,17 @@ def sqlmap(index):
                         r.ORDER_ID AS order_id,
                         FROM_UNIXTIME( UNIX_TIMESTAMP( r.CHECK_DATE_3 ), '%s' ),
                         romeo.convertCurrency_v2 ( eoi.currency, 'USD', r.ALTERATION_FEE, FROM_UNIXTIME( UNIX_TIMESTAMP( r.CHECK_DATE_3 ), '%s' ), 'USD' ) AS fee,
-                        CHECK_DATE_3 AS finishDate 
+                        CASE
+                            r.`STATUS` 
+                            WHEN 'RFND_STTS_INIT' THEN
+                            '新建' 
+                            WHEN 'RFND_STTS_IN_CHECK' THEN
+                            '审核' 
+                            WHEN 'RFND_STTS_EXECUTED' THEN
+                            '完成' 
+                            WHEN 'RFND_STTS_CHECK_OK' THEN
+                            '待退款' 
+                        END AS r_status
             FROM
                         romeo.refund r
             INNER JOIN 
@@ -13,7 +23,7 @@ def sqlmap(index):
             WHERE
                         r.ORDER_ID IN ( '%s' ) 
             AND 
-                        `STATUS` = 'RFND_STTS_EXECUTED'
+                        r.`STATUS` IN ('RFND_STTS_EXECUTED', 'RFND_STTS_INIT', 'RFND_STTS_IN_CHECK', 'RFND_STTS_CHECK_OK')
             AND 
                         REFUND_TYPE_ID = 5
             ''',

@@ -1,8 +1,7 @@
 # script/orderInfo.py
 
-
 import asyncio
-import datetime
+import concurrent.futures
 import time
 
 from tools.dbLink import getAll
@@ -15,33 +14,56 @@ from sqlmap.finanicalSql import sqlmap
 
 from tools.timeFormat import *
 
+from pkg.pool.sqlpool import SqlPool
+
 from tools.sendEmail import sendEmail
 
 allDate = {}
 
 
 async def main(tmpList, fileName, filePath):
-    tasks = [asyncio.create_task(getOrderInfo(i)) for i in tmpList]
-    for n in tasks:
-        await n
+    # tasks = [asyncio.create_task(testFunc(i)) for i in tmpList]
+    # for n in tasks:
+    #     print("here")
+    #     await n
+    # await asyncio.gather(*tasks)
+    # tmpAll = sorted(allDate.items(), key=lambda x: x[0])
 
-    tmpAll = sorted(allDate.items(), key=lambda x: x[0])
+    with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
+        to_do = []
+        for i in tmpList:
+            future = executor.submit(getOrderInfo, i)
+            to_do.append(future)
+
+        for future in concurrent.futures.as_completed(to_do):
+            future.result()
+
     m = 0
     data = {}
     desc = {}
     title = {}
-    for k, v in dict(tmpAll).items():
-        data[m] = v
-        desc[m] = "订单明细" + str(m + 1)
-        title[m] = ['订单号', '淘宝订单号', '国家', '发货时间', '币种', '原始运费', '转换后运费', '原始订单金额', '转换后订单金额', '原始关税', '转换后关税',
-                    '原始VAT增值税', '转换后VAT增值税', '订单状态']
-        m += 1
-    # 写入excel
-    saveToExcel(data, desc, title, filePath)
-    sendEmail("数据报表", "订单信息", ["tansuan@kerrylan.com"], fileName, filePath, True)
+
+    if allDate:
+        for k, v in dict(allDate).items():
+            data[m] = v
+            desc[m] = "订单明细" + str(m + 1)
+            title[m] = ['订单号', '淘宝订单号', '国家', '发货时间', '币种', '原始运费', '转换后运费', '原始订单金额', '转换后订单金额', '原始关税', '转换后关税',
+                        '原始VAT增值税', '转换后VAT增值税', '订单状态']
+            m += 1
+        # 写入excel
+        saveToExcel(data, desc, title, filePath)
+        # sendEmail("数据报表", "订单信息", ["tansuan@kerrylan.com"], fileName, filePath, True)
+    else:
+        printLog("暂无数据", None)
 
 
-async def getOrderInfo(timeInfo):
+def testFunc(a):
+    bDate = a[0]
+    eDate = a[1]
+    printLog("%s---%s订单数据开始拉取", (bDate, eDate))
+
+
+def getOrderInfo(timeInfo):
     bDate = timeInfo[0]
     eDate = timeInfo[1]
     printLog("%s---%s订单数据开始拉取", (bDate, eDate))

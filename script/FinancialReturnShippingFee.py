@@ -43,7 +43,7 @@ def financialReturnShippingFee(bDate, eDate, fileName, filePath):
                         '订单号': tmpData[row['order_id']]['订单号'],
                         '发货月份': tmpData[row['order_id']]['发货月份'],
                         '对应的退货物流收入': row['fee'],
-                        '退款完成时间': row['finishDate']
+                        '退款状态': row['r_status']
                     })
         except Exception as e:
             raise e
@@ -51,7 +51,7 @@ def financialReturnShippingFee(bDate, eDate, fileName, filePath):
     # 写入excel
     saveToExcel({0: exportData},
                 {0: "明细"},
-                {0: ['订单号', '发货月份', '对应的退货物流收入', '退款完成时间']},
+                {0: ['订单号', '发货月份', '对应的退货物流收入', '退款状态']},
                 filePath)
     sendEmail("数据报表", "退货物流收入", ["tansuan@kerrylan.com"], fileName, filePath, True)
 
@@ -85,8 +85,8 @@ def financialRefundTimeFee(bDate, eDate, fileName, filePath):
 
 
 if __name__ == "__main__":
-    # financialReturnShippingFee("2022-08-01", "2022-10-01", 'financialReturnShippingFee.xlsx',
-    #                            '../data/financialReturnShippingFee.xlsx')
+    financialReturnShippingFee("2022-01-01", "2022-08-31", 'financialReturnShippingFee.xlsx',
+                               '../data/financialReturnShippingFee.xlsx')
 
-    financialRefundTimeFee("2022-09-05 00:00:00", "2022-12-27 23:59:59", 'financialRefundTimeFee.xlsx',
-                           '../data/financialRefundTimeFee.xlsx')
+    # financialRefundTimeFee("2022-09-01 00:00:00", "2022-10-31 23:59:59", 'financialRefundTimeFee.xlsx',
+    #                        '../data/financialRefundTimeFee.xlsx')
