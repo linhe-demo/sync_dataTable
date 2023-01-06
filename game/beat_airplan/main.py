@@ -53,6 +53,7 @@ class Plane(Base):
 class HeroPlane(Plane):
 
     def __init__(self, screen, name):
+
         # 设置飞机默认的位置
         self.x = 230
         self.y = 600
