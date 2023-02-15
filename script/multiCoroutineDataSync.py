@@ -30,6 +30,10 @@ async def main(sourceType, data, consumerNum):
 
         productData = getErpStockInfo(getConfigInfo('erp_config')['url'], data.get('method'), time, param)
 
+    if len(productData) == 0:
+        printLog("暂无需要同步的数据！", None)
+        exit()
+
     # 对数据中的数据类型进行修复
     for i in range(len(productData)):
         productData[i]['quantity'] = float(productData[i].get('quantity'))
@@ -40,9 +44,9 @@ async def main(sourceType, data, consumerNum):
     newProductData = [productData[i:i + tmpLen] for i in range(0, len(productData), tmpLen)]
 
     # 获取面辅料后端登录接口token
-    client = loginAccessories(getConfigInfo('accessories_config')['url'], "/user/login",
-                              {"username": getConfigInfo('accessories_config')['userName'],
-                               "password": getConfigInfo('accessories_config')['password']})
+    client = loginAccessories(getConfigInfo('matpur_config')['url'], "/user/login",
+                              {"username": getConfigInfo('matpur_config')['userName'],
+                               "password": getConfigInfo('matpur_config')['password']})
     token = client.get('accessToken')
 
     # 启用协程开始消费数据
@@ -64,12 +68,12 @@ def asyncData(data, num, token=None):
     time.sleep(1)  # 休眠1秒
     printLog("协程 %s 开始同步数据", num)
     # 开始调用面辅料后端同步接口
-    asyncAccessoriesStock(getConfigInfo('accessories_config')['url'], "/sync/goods/stock", {"items": data}, token)
+    asyncAccessoriesStock(getConfigInfo('matpur_config')['url'], "/sync/goods/stock", {"items": data}, token)
     printLog("协程 %s 同步完成！", num)
 
 
 if __name__ == "__main__":
     t = time.perf_counter()
     asyncio.run(main('curl', {'method': 'Apiv1/Lace/goods/inventory',
-                              'param': {"start_at": "2022-01-01", "end_at": "2023-02-14", "type": "fabric"}}, 10))
+                              'param': {"start_at": "2022-01-01", "end_at": "2023-02-14", "type": "access"}}, 10))
     print(f'coast:{time.perf_counter() - t:.8f}s')
