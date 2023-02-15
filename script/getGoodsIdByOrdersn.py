@@ -22,7 +22,6 @@ def getGidByOrderSn(data, fileName, filePath):
         sql = sqlmap('getGidByOrderSn')
         try:
             results = getAll(sql, ("','".join(m)))
-
             for row in results:
                 allData.append({
                     '外部订单号': row['taobao_order_sn'],
