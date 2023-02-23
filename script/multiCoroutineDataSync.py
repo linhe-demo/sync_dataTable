@@ -67,14 +67,14 @@ async def main(sourceType, data, consumerNum):
 def asyncData(data, num, token=None):
     time.sleep(1)  # 休眠1秒
     printLog("协程 %s 开始同步数据", num)
-    nn = 1
-    while True:
-        time.sleep(0.1)  # 休眠1秒
-        printLog("协程 %s 同步 %s次", (num, nn))
-        asyncAccessoriesStock(getConfigInfo('matpur_config')['url'], "/delete/info", {"userName": "test", "type": nn, }, token)
-        nn += 1
+    # nn = 1
+    # while True:
+    #     time.sleep(0.1)  # 休眠1秒
+    #     printLog("协程 %s 同步 %s次", (num, nn))
+    #     asyncAccessoriesStock(getConfigInfo('matpur_config')['url'], "/delete/info", {"userName": "test", "type": nn, }, token)
+    #     nn += 1
     # 开始调用面辅料后端同步接口
-    # asyncAccessoriesStock(getConfigInfo('matpur_config')['url'], "/sync/goods/stock", {"items": data}, token)
+    asyncAccessoriesStock(getConfigInfo('matpur_config')['url'], "/sync/goods/stock", {"items": data}, token)
     printLog("协程 %s 同步完成！", num)
 
 
