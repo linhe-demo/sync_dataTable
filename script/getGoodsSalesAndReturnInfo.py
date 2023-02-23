@@ -91,7 +91,7 @@ def getInfoByIds(bDate, eDate, paramList, fileName, filePath):
                      'Blushing Pink Size', 'Blushing Pink 2022年销量', 'Blushing Pink 2022年退货数量', 'Ivory Size',
                      'Ivory 2022年销量', 'Ivory 2022年退货数量']},
                 filePath)
-    # sendEmail("商品销量与退货数据表", "商品销量与退货数据", ["muhe@kerrylan.com"], fileName, filePath, False)
+    sendEmail("商品销量与退货数据表", "商品销量与退货数据", ["feiran@kerrylan.com"], fileName, filePath, False)
 
 
 if __name__ == "__main__":
