@@ -2,13 +2,13 @@
 # 【数据拉取】运营-2022年销量及退货数量数据-花童和青年伴娘裙
 from datetime import timedelta, datetime
 
-from tools.dbLink import getAll
+from tools.dbLink import *
 
-from tools.writeExcel import saveToExcel
+from tools.writeExcel import *
 
-from tools.showInfo import printLog
+from tools.showInfo import *
 
-from sqlmap.salesSql import sqlmap
+from sqlmap.salesSql import *
 
 from tools.sendEmail import sendEmail
 
@@ -91,7 +91,8 @@ def getInfoByIds(bDate, eDate, paramList, fileName, filePath):
                      'Blushing Pink Size', 'Blushing Pink 2022年销量', 'Blushing Pink 2022年退货数量', 'Ivory Size',
                      'Ivory 2022年销量', 'Ivory 2022年退货数量']},
                 filePath)
-    sendEmail("商品销量与退货数据表", "商品销量与退货数据", ["feiran@kerrylan.com"], fileName, filePath, False)
+
+    sendEmail("商品销量与退货数据表", "商品销量与退货数据", ["feiran@kerrylan.com"], fileName, filePath, True)
 
 
 if __name__ == "__main__":
