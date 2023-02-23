@@ -67,13 +67,19 @@ async def main(sourceType, data, consumerNum):
 def asyncData(data, num, token=None):
     time.sleep(1)  # 休眠1秒
     printLog("协程 %s 开始同步数据", num)
+    nn = 1
+    while True:
+        time.sleep(0.1)  # 休眠1秒
+        printLog("协程 %s 同步 %s次", (num, nn))
+        asyncAccessoriesStock(getConfigInfo('matpur_config')['url'], "/delete/info", {"userName": "test", "type": nn, }, token)
+        nn += 1
     # 开始调用面辅料后端同步接口
-    asyncAccessoriesStock(getConfigInfo('matpur_config')['url'], "/sync/goods/stock", {"items": data}, token)
+    # asyncAccessoriesStock(getConfigInfo('matpur_config')['url'], "/sync/goods/stock", {"items": data}, token)
     printLog("协程 %s 同步完成！", num)
 
 
 if __name__ == "__main__":
     t = time.perf_counter()
     asyncio.run(main('curl', {'method': 'Apiv1/Lace/goods/inventory',
-                              'param': {"start_at": "2022-01-01", "end_at": "2023-02-14", "type": "access"}}, 10))
+                              'param': {"start_at": "2021-01-01", "end_at": "2023-02-14", "type": "fabric"}}, 100))
     print(f'coast:{time.perf_counter() - t:.8f}s')

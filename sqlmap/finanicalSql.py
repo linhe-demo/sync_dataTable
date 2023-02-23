@@ -72,7 +72,8 @@ def sqlmap(index):
             INNER JOIN 
                         ecshop.ecs_goods eg ON eg.goods_id = eog.goods_id
                 WHERE
-                        r.CREATED_STAMP >= '%s' 
+                        eg.goods_party_id = 65545
+                        AND r.CREATED_STAMP >= '%s' 
                         AND r.CREATED_STAMP <= '%s' 
                         AND r.REFUND_TYPE_ID = 5 
                         AND r.`STATUS` IN ('RFND_STTS_EXECUTED', 'RFND_STTS_INIT', 'RFND_STTS_IN_CHECK', 'RFND_STTS_CHECK_OK')
@@ -113,6 +114,33 @@ def sqlmap(index):
                         eoi.shipping_time >= UNIX_TIMESTAMP('%s')
                         AND eoi.shipping_time <= UNIX_TIMESTAMP('%s')
                         AND eoi.order_type_id='SALE'; 
-        '''
+        ''',
+        "getReturnLogisticsRevenueByOrderSn": '''
+            SELECT 
+                        t.*, ROUND(romeo.convertCurrency(t.currency, 'USD', t.label_fee, t.check_time, 'USD'),2) AS label_fee_usd
+            FROM (
+                        SELECT      eoi.order_id, r.refund_id, 
+                                    CONCAT("'", eoi.taobao_order_sn) AS taobao_order_sn,
+                                    CASE
+                                        r.`STATUS`
+                                        WHEN 'RFND_STTS_INIT' THEN
+                                        '新建'
+                                        WHEN 'RFND_STTS_IN_CHECK' THEN
+                                        '审核'
+                                        WHEN 'RFND_STTS_EXECUTED' THEN
+                                        '完成'
+                                        WHEN 'RFND_STTS_CHECK_OK' THEN
+                                        '待退款'
+                                    END AS r_status, 
+                                    (0 - r.ALTERATION_FEE) as label_fee, 
+                                    r.currency, 
+                                    r.CHECK_DATE_1 AS check_time
+                        FROM 
+                                    ecshop.ecs_order_info eoi
+                        LEFT JOIN 
+                                    romeo.refund r ON r.order_id = CONVERT(eoi.order_id USING UTF8) AND r.`STATUS` IN ('RFND_STTS_EXECUTED', 'RFND_STTS_INIT', 'RFND_STTS_IN_CHECK', 'RFND_STTS_CHECK_OK')
+                        WHERE 1
+                        AND eoi.taobao_order_sn IN ('%s')
+                ) AS t'''
     }
     return sql[index]
