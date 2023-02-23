@@ -1,0 +1,35 @@
+{
+  "db": {
+    "host": "0.0.0.0",
+    "port": 3306,
+    "user": "user",
+    "password": "aaa",
+    "database": "aa",
+    "timeout": 3600
+  },
+  "db_powerful": {
+    "host": "0.0.0.0",
+    "port": 3306,
+    "user": "aaa",
+    "password": "bbb",
+    "database": "ccc",
+    "timeout": 3600
+  },
+  "email": {
+    "host": "aaaaa",
+    "port": 465,
+    "user": "as",
+    "password": "aaa",
+    "fromAddress": "aaa"
+  },
+  "erp_config": {
+    "url": "aaaa",
+    "appId": "aaa",
+    "appSecret": "ddd"
+  },
+  "matpur_config": {
+    "url": "0.0.0.0",
+    "userName": "231",
+    "password": "3213"
+  }
+}

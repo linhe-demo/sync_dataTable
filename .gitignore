@@ -1,7 +1,7 @@
 .idea
 config/*.json
 data/*
-config/*
+config/config.json
 script/demo.py
 script/demo1.py
 log/*
