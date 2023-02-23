@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 # 【数据拉取】财务分析-退货物流收入数据2023.02 (oak-4566)
-from tools.array import InArray
+from tools.array import InArray, ArrayUnique
 from tools.dbLink import getAll
 from tools.readExcel import readExcelData
 
@@ -18,10 +18,14 @@ def getReturnLogisticsRevenueByOrderSn(file, fileName, filePath):
     printLog("退货物流收入数据2023.02 开始拉取", None)
     exportData = []
     orderSn = readExcelData(file, 1)
+
+    # 去除重复订单号
+    orderSn = ArrayUnique(orderSn)
+
     step = 5000
     tmpList = [orderSn[i:i + step] for i in range(0, len(orderSn), step)]
     for i in tmpList:
-
+        print(InArray('0116663105', i))
         try:
             sql = sqlmap('getReturnLogisticsRevenueByOrderSn')
             results = getAll(sql, ("','".join(i)))
@@ -42,9 +46,10 @@ def getReturnLogisticsRevenueByOrderSn(file, fileName, filePath):
     # 写入excel
     saveToExcel({0: exportData},
                 {0: "明细"},
-                {0: ['order_id', 'refund_id', 'taobao_order_sn', 'r_status', 'label_fee', 'currency', 'check_time', 'label_fee_usd']},
+                {0: ['order_id', 'refund_id', 'taobao_order_sn', 'r_status', 'label_fee', 'currency', 'check_time',
+                     'label_fee_usd']},
                 filePath)
-    sendEmail("数据报表", "退货退款数据", ["tansuan@kerrylan.com", "jjserppm@kerrylan.com"], fileName, filePath, True)
+    sendEmail("数据报表", "退货退款数据", ["tansuan@kerrylan.com", "jjserppm@kerrylan.com"], fileName, filePath, False)
 
 
 if __name__ == "__main__":
