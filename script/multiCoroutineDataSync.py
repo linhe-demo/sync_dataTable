@@ -40,6 +40,7 @@ async def main(sourceType, data, consumerNum):
 
     # 计算每个协程需要消耗的数据量
     tmpLen = math.ceil(len(productData) / consumerNum)
+
     # 将生产数据分割为多个消费列表
     newProductData = [productData[i:i + tmpLen] for i in range(0, len(productData), tmpLen)]
 
