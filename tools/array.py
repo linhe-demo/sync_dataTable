@@ -1,4 +1,3 @@
-
 def InArray(target, lists):
     res = False
     for i in lists:
@@ -19,3 +18,10 @@ def ArrayUnique(lists):
             tmpMap[i] = 1
 
     return newOrderSn
+
+
+def ArrayChunk(lists, step):
+    if len(lists):
+        return []
+
+    return [lists[i:i + step] for i in range(0, len(lists), step)]

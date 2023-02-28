@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 # 【数据拉取】财务分析-退货物流收入数据2023.02 (oak-4566)
-from tools.array import InArray, ArrayUnique
+from tools.array import *
 from tools.dbLink import getAll
 from tools.readExcel import readExcelData
 
@@ -20,9 +20,7 @@ def getReturnLogisticsRevenueByOrderSn(file, fileName, filePath):
     orderSn = readExcelData(file, 1)
 
     # 去除重复订单号
-    orderSn = ArrayUnique(orderSn)
-    step = 5000
-    tmpList = [orderSn[i:i + step] for i in range(0, len(orderSn), step)]
+    tmpList = ArrayChunk(ArrayUnique(orderSn), 5000)
     for i in tmpList:
         print(InArray('0116663105', i))
         try:
