@@ -1,3 +1,4 @@
+# 检查列表中是否包含目标元素
 def InArray(target, lists):
     res = False
     for i in lists:
@@ -20,6 +21,7 @@ def ArrayUnique(lists):
     return newOrderSn
 
 
+# 将列表拆分成n个包含step个元素的列表的大列表
 def ArrayChunk(lists, step):
     if len(lists):
         return []
