@@ -23,7 +23,8 @@ def ArrayUnique(lists):
 
 # 将列表拆分成n个包含step个元素的列表的大列表
 def ArrayChunk(lists, step):
-    if len(lists):
+
+    if len(lists) == 0:
         return []
 
     return [lists[i:i + step] for i in range(0, len(lists), step)]

@@ -88,5 +88,5 @@ if __name__ == "__main__":
     # financialReturnShippingFee("2022-09-12", "2022-12-31", 'financialReturnShippingFee.xlsx',
     #                            '../data/financialReturnShippingFee.xlsx')  # 退货物流收入
 
-    financialRefundTimeFee("2022-10-24 00:00:00", "2023-02-21 23:59:59", 'financialRefundTimeFee.xlsx',
+    financialRefundTimeFee("2022-12-09 00:00:00", "2023-03-10 23:59:59", 'financialRefundTimeFee.xlsx',
                            '../data/financialRefundTimeFee.xlsx')  # 退货时效分析

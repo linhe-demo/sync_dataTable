@@ -47,3 +47,8 @@ def asyncAccessoriesStock(url, method, param, token):
         printLog("面辅料库存同步接口数据返回异常 %s", (res.get('msg')))
     else:
         return res.get('data')
+
+
+def demoGet(url):
+    res = requests.get(url)
+    return json.loads(res.content)
