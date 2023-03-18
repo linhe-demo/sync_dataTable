@@ -8,3 +8,4 @@ log/*
 script/runData.py
 demo/*
 demo.py
+script/demo*
