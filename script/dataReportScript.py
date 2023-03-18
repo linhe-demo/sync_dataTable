@@ -1,7 +1,7 @@
 #! /usr/bin/env python3 获取批量收货的总计和明细
 import pymysql
 
-from sqlmap.sqlone import sqlmap
+from sqlmap.kll_sql.sqlone import sqlmap
 
 from tools.dbLink import getAll
 

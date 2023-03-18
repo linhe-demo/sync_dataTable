@@ -10,7 +10,7 @@ from tools.curl import *
 from tools.dbLink import getAll
 from tools.getConfig import getConfigInfo
 from tools.showInfo import printLog
-from sqlmap.goodsSql import sqlmap
+from sqlmap.kll_sql.goodsSql import sqlmap
 
 
 async def main(sourceType, data, consumerNum):

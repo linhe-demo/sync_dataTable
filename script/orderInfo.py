@@ -10,7 +10,7 @@ from tools.writeExcel import saveToExcel
 
 from tools.showInfo import printLog
 
-from sqlmap.finanicalSql import sqlmap
+from sqlmap.kll_sql.finanicalSql import sqlmap
 
 from tools.timeFormat import *
 

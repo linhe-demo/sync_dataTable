@@ -9,7 +9,7 @@ from tools.writeExcel import saveToExcel
 
 from tools.showInfo import printLog
 
-from sqlmap.sqlone import sqlmap
+from sqlmap.kll_sql.sqlone import sqlmap
 
 from tools.sendEmail import sendEmail
 

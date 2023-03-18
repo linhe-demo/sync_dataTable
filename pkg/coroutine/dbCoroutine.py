@@ -3,7 +3,7 @@ import asyncio
 import concurrent
 import math
 
-from sqlmap.lableSql import sqlmap
+from sqlmap.kll_sql.lableSql import sqlmap
 from tools.array import ArrayChunk
 from tools.dbLink import getAll
 from tools.showInfo import printLog

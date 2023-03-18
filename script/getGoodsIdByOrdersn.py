@@ -7,7 +7,7 @@ from tools.readExcel import readExcelData
 
 from tools.writeExcel import saveToExcel
 
-from sqlmap.goodsSql import sqlmap
+from sqlmap.kll_sql.goodsSql import sqlmap
 
 from tools.sendEmail import sendEmail
 

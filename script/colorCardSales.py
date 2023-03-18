@@ -1,10 +1,8 @@
 #! 采购-2021&2022年色卡sku级别的销量数据 （oak-4146）
 import pymysql
 
-from sqlmap.salesSql import sqlmap
-
+from sqlmap.kll_sql.salesSql import sqlmap
 from tools.dbLink import getAll
-from tools.runTime import logExecutionTime
 from tools.sendEmail import sendEmail
 from tools.showInfo import printLog
 from tools.statusMap import saleOrderStatusMap

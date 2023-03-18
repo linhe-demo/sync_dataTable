@@ -1,7 +1,7 @@
 #! /usr/bin/env python3 获取特定品类下的
 import threading
 
-from sqlmap.sqlone import sqlmap
+from sqlmap.kll_sql.sqlone import sqlmap
 
 from tools.dbLink import getAll
 

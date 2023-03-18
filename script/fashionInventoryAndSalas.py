@@ -10,7 +10,7 @@ from tools.writeExcel import saveToExcel
 
 from tools.showInfo import printLog
 
-from sqlmap.lableSql import sqlmap
+from sqlmap.kll_sql.lableSql import sqlmap
 
 
 def getInventoryAndSalas(partyId, categoryId, fileName, filePath):
@@ -70,7 +70,7 @@ def getInventoryAndSalas(partyId, categoryId, fileName, filePath):
             raise e
 
     # 获取前三次备货数和入库数
-    tmpData = consumeCoroutine(tmpPsku, tmpData, 20)
+    tmpData = consumeCoroutine(tmpPsku, tmpData, 15)
 
     for n in tmpData:
         excelData.append(tmpData[n])

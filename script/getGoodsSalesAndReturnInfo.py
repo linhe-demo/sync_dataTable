@@ -8,7 +8,7 @@ from tools.writeExcel import *
 
 from tools.showInfo import *
 
-from sqlmap.salesSql import *
+from sqlmap.kll_sql.salesSql import *
 
 from tools.sendEmail import sendEmail
 

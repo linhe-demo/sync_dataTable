@@ -2,13 +2,13 @@
 # VV时装广东厂库存、VV时装广东样衣仓样衣单 数据脚本
 
 import tools.readFile
+from sqlmap.kll_sql.sqlone import sqlmap
 from tools.dbLink import getAll
 
 from tools.writeExcel import saveToExcel
 
 from tools.showInfo import printLog
 
-from sqlmap.sqlone import sqlmap
 
 from tools.sendEmail import sendEmail
 
