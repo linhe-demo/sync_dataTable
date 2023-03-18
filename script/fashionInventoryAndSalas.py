@@ -4,6 +4,7 @@
 from pkg.coroutine.dbCoroutine import consumeCoroutine
 from tools.array import *
 from tools.dbLink import getAll
+from tools.sendEmail import sendEmail
 
 from tools.writeExcel import saveToExcel
 
@@ -85,7 +86,7 @@ def getInventoryAndSalas(partyId, categoryId, fileName, filePath):
                      'PSKU第三次入库数']},
                 filePath)
     # 发送邮件
-    # sendEmail("数据报表", "JJS 轻礼服时装销量&入库数据报表", ["menglu@kerrylan.com", "tansuan@kerrylan.com"], fileName, filePath, True)
+    sendEmail("数据报表", "JJS 轻礼服时装销量&入库数据报表", ["menglu@kerrylan.com", "tansuan@kerrylan.com"], fileName, filePath, True)
 
 
 if __name__ == "__main__":
