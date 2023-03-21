@@ -1,7 +1,7 @@
 from dbutils.pooled_db import PooledDB
-import pkg.mysqlpool.db_config as config
+import pkg.pool.db_config as config
 
-from pkg.mysqlpool.singleton import singleton
+from pkg.pool.singleton import singleton
 
 
 class MyConnectionPool(object):

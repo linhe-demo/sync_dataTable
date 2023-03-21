@@ -15,9 +15,10 @@ def dbConnection():
 
 def getAll(sql, param):
     db = dbConnection()
-    cursor = db.cursor(cursor=pymysql.cursors.DictCursor)
-    cursor.execute(sql % param)
-    return cursor.fetchall()
+    with db.cursor(cursor=pymysql.cursors.DictCursor) as conn:
+        conn.execute(sql % param)
+        res = conn.fetchall()
+    return res
 
 
 def getOne(sql, param):

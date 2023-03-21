@@ -1,5 +1,5 @@
 import time
-from pkg.mysqlpool.db_dbutils_init import get_my_connection
+from pkg.pool.db_dbutils_init import get_my_connection
 
 """执行语句查询有结果返回结果没有返回0；增/删/改返回变更数据条数，没有返回0"""
 

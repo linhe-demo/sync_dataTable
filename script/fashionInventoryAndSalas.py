@@ -70,7 +70,7 @@ def getInventoryAndSalas(partyId, categoryId, fileName, filePath):
             raise e
 
     # 获取前三次备货数和入库数
-    tmpData = consumeCoroutine(tmpPsku, tmpData, 15)
+    tmpData = consumeCoroutine(tmpPsku, tmpData, 30)
 
     for n in tmpData:
         excelData.append(tmpData[n])
@@ -90,5 +90,6 @@ def getInventoryAndSalas(partyId, categoryId, fileName, filePath):
 
 
 if __name__ == "__main__":
+
     getInventoryAndSalas(65545, 295, "jjsInventoryAndSalasInfo.xlsx",
                          "../data/jssInventoryAndSalasInfo.xlsx")  # JJS 轻礼服时装销量&入库数据拉取
