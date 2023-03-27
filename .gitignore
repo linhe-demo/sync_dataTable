@@ -10,3 +10,4 @@ demo/*
 demo.py
 script/demo*
 sqlmap/kll_sql
+game/*
