@@ -14,6 +14,15 @@ def read_excl(filePath):
     return raw_data.values
 
 
+def read_txt(filePath):
+    data = []
+    with open(filePath, 'r', encoding='utf-8') as f:
+        for line in f:
+            data_line = line.strip("\n").split("\r")  # 去除首尾换行符，并按换行划分
+            data.append(data_line)
+    return data
+
+
 def readRow(filePath, row):
     feature = []
     lists = []

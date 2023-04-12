@@ -71,7 +71,8 @@ def financialRefundTimeFee(bDate, eDate, fileName, filePath):
                 '退款完成时间': row['finishDate'],
                 '品类ID': row['external_cat_id'],
                 '退款状态': row['r_status'],
-                '国家': row['region_name']
+                '国家': row['region_name'],
+                '使用label': row['label']
             })
     except Exception as e:
         raise e
@@ -79,14 +80,14 @@ def financialRefundTimeFee(bDate, eDate, fileName, filePath):
     # 写入excel
     saveToExcel({0: exportData},
                 {0: "明细"},
-                {0: ['订单号', '退货申请时间', '发货月份', '退款完成时间', '品类ID', '退款状态', '国家']},
+                {0: ['订单号', '退货申请时间', '发货月份', '退款完成时间', '品类ID', '退款状态', '国家', '使用label']},
                 filePath)
-    sendEmail("数据报表", "退货退款时效分析", ["tansuan@kerrylan.com"], fileName, filePath, True)
+    sendEmail("数据报表", "退货退款时效分析", ["tansuan@kerrylan.com", "jjserppm@kerrylan.com"], fileName, filePath, False)
 
 
 if __name__ == "__main__":
     # financialReturnShippingFee("2022-09-12", "2022-12-31", 'financialReturnShippingFee.xlsx',
     #                            '../data/financialReturnShippingFee.xlsx')  # 退货物流收入
 
-    financialRefundTimeFee("2022-12-09 00:00:00", "2023-03-10 23:59:59", 'financialRefundTimeFee.xlsx',
+    financialRefundTimeFee("2023-02-16 00:00:00", "2023-03-15 23:59:59", 'financialRefundTimeFee.xlsx',
                            '../data/financialRefundTimeFee.xlsx')  # 退货时效分析

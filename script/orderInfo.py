@@ -52,7 +52,7 @@ async def main(tmpList, fileName, filePath):
             m += 1
         # 写入excel
         saveToExcel(data, desc, title, filePath)
-        # sendEmail("数据报表", "订单信息", ["tansuan@kerrylan.com"], fileName, filePath, True)
+        # sendEmail("数据报表", "订单信息", [""], filtansuan@kerrylan.comeName, filePath, True)
     else:
         printLog("暂无数据", None)
 

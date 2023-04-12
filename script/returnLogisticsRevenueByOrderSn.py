@@ -47,7 +47,7 @@ def getReturnLogisticsRevenueByOrderSn(file, fileName, filePath):
                 {0: ['order_id', 'refund_id', 'taobao_order_sn', 'r_status', 'label_fee', 'currency', 'check_time',
                      'label_fee_usd']},
                 filePath)
-    sendEmail("数据报表", "退货退款数据", ["muhe@kerrylan.com"], fileName, filePath, True)
+    sendEmail("数据报表", "退货退款数据", ["tansuan@kerrylan.com", "jjserppm@kerrylan.com"], fileName, filePath, False)
 
 
 if __name__ == "__main__":
