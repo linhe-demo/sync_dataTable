@@ -9,6 +9,6 @@ script/runData.py
 demo/*
 demo.py
 script/demo*
-sqlmap/kll_sql
-sqlmap/wms_sql
+#sqlmap/kll_sql
+#sqlmap/wms_sql
 game/*
