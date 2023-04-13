@@ -86,7 +86,7 @@ def getInventoryInfo(file, fileName, filePath):
 def filterSku(tmpList):
     skuMap = {}
     for i in tmpList:
-        if i[0].find("内容: shipmentSn :") > -1 and i[0].find(":当前sku "):
+        if i[0].find("内容: shipmentSn :") > -1 and i[0].find(":当前sku [") > -1:
             index1 = i[0].find("OUT")
             index2 = i[0].find("[")
             index3 = i[0].find("]")
