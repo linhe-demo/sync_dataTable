@@ -62,14 +62,15 @@ def financialRefundTimeFee(bDate, eDate, fileName, filePath):
     # 获取满足条件的发货订单信息
     try:
         sql = sqlmap('getRefundDateInfo')
-        results = getAll(sql, ('%Y-%m-%d', '%Y-%m', bDate, eDate))
+        results = getAll(sql, ('%Y-%m-%d', '%Y-%m', '%Y-%m-01', bDate, eDate))
         for row in results:
             exportData.append({
                 '订单号': row['taobao_order_sn'],
+                '退款申请单号': row['r_id'],
+                '退货申请单号': row['return_apply_id'],
                 '退货申请时间': row['r_date'],
                 '发货月份': row['s_date'],
                 '退款完成时间': row['finishDate'],
-                '品类ID': row['external_cat_id'],
                 '退款状态': row['r_status'],
                 '国家': row['region_name'],
                 '使用label': row['label']
@@ -80,14 +81,14 @@ def financialRefundTimeFee(bDate, eDate, fileName, filePath):
     # 写入excel
     saveToExcel({0: exportData},
                 {0: "明细"},
-                {0: ['订单号', '退货申请时间', '发货月份', '退款完成时间', '品类ID', '退款状态', '国家', '使用label']},
+                {0: ['订单号', '退款申请单号', '退货申请单号', '退货申请时间', '发货月份', '退款完成时间', '退款状态', '国家', '使用label']},
                 filePath)
-    sendEmail("数据报表", "退货退款时效分析", ["tansuan@kerrylan.com", "jjserppm@kerrylan.com"], fileName, filePath, False)
+    # sendEmail("数据报表", "退货退款时效分析", ["tansuan@kerrylan.com", "jjserppm@kerrylan.com"], fileName, filePath, False)
 
 
 if __name__ == "__main__":
     # financialReturnShippingFee("2022-09-12", "2022-12-31", 'financialReturnShippingFee.xlsx',
     #                            '../data/financialReturnShippingFee.xlsx')  # 退货物流收入
 
-    financialRefundTimeFee("2023-02-16 00:00:00", "2023-03-15 23:59:59", 'financialRefundTimeFee.xlsx',
+    financialRefundTimeFee("2022-08-01 00:00:00", "2023-03-31 23:59:59", 'financialRefundTimeFee.xlsx',
                            '../data/financialRefundTimeFee.xlsx')  # 退货时效分析

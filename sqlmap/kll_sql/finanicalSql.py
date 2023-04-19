@@ -47,7 +47,9 @@ def sqlmap(index):
                         FROM_UNIXTIME( eoi.shipping_time, '%s' ) AS s_date,
                         er.region_name,
                         r.CHECK_DATE_3 AS finishDate,
-                        r.ALTERATION_FEE AS label,
+                        r.REFUND_ID as r_id,
+                        r.return_apply_id,
+                        romeo.convertCurrency_v2 ( r.currency, 'USD', r.ALTERATION_FEE, FROM_UNIXTIME( UNIX_TIMESTAMP( r.CHECK_DATE_3 ), '%s' ), 'USD' ) AS label,
                         CASE
                             r.`STATUS` 
                             WHEN 'RFND_STTS_INIT' THEN
@@ -78,6 +80,7 @@ def sqlmap(index):
                         AND r.CREATED_STAMP <= '%s' 
                         AND r.REFUND_TYPE_ID = 5 
                         AND r.`STATUS` IN ('RFND_STTS_EXECUTED', 'RFND_STTS_INIT', 'RFND_STTS_IN_CHECK', 'RFND_STTS_CHECK_OK')
+            GROUP BY    eoi.taobao_order_sn, r_id
                         ''',
         "getOrderInfo": '''
             SELECT
